@@ -52,8 +52,11 @@ pipeline {
         stage('Build Image & Tag Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred') {
-                        sh "docker build -t chimdi247/noteapp:$IMAGE_TAG ."
+                    withDockerRegistry([credentialsId: 'docker-cred',  url: 'https://index.docker.io/v1/']) {
+                        sh """
+                            docker build -t chimdi247/noteapp:${IMAGE_TAG} .
+                            docker tag chimdi247/noteapp:${IMAGE_TAG} chimdi247/noteapp:${IMAGE_TAG}
+                         """
                     }
                 }
             }
