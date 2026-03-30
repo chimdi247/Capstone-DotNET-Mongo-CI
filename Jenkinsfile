@@ -53,7 +53,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred') {
-                        sh "docker build -t adijaiswal/noteapp:$IMAGE_TAG ."
+                        sh "docker build -t chimdi247/noteapp:$IMAGE_TAG ."
                     }
                 }
             }
@@ -61,7 +61,7 @@ pipeline {
         
         stage('trivy Image Scan') {
             steps {
-              sh 'trivy image --format table -o trivy-image-report.html adijaiswal/noteapp:$IMAGE_TAG'
+              sh 'trivy image --format table -o trivy-image-report.html chimdi247/noteapp:$IMAGE_TAG'
             }
         }
         
@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred') {
-                        sh "docker push adijaiswal/noteapp:$IMAGE_TAG"
+                        sh "docker push chimdi247/noteapp:$IMAGE_TAG"
                     }
                 }
             }
@@ -81,11 +81,11 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'git-token', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh '''
                             # Clone the CD Repo
-                            git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/jaiswaladi246/Capstone-DotNET-Mongo-CD.git
+                            git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/chimdi247/Capstone-DotNET-Mongo-CD.git
                             
                             # Update the tag in manifest
                             cd Capstone-DotNET-Mongo-CD
-                            sed -i "s|adijaiswal/noteapp:.*|adijaiswal/noteapp:${IMAGE_TAG}|" Manifest/manifest.yaml
+                            sed -i "s|chimdi247/noteapp:.*|chimdi247/noteapp:${IMAGE_TAG}|" Manifest/manifest.yaml
                             
                             # Confirm Changes
                             echo "Updated manifest file contents:"
@@ -129,8 +129,8 @@ pipeline {
             emailext (
                 subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
                 body: body,
-                to: '567adddi.jais@gmail.com',
-                from: 'jaiswaladi246@gmail.com',
+                to: 'shimdi247@gmail.com',
+                from: 'chimdi247@gmail.com',
                 replyTo: 'jenkins@devopsshack.com',
                 mimeType: 'text/html',
                
